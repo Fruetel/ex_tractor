@@ -4,7 +4,7 @@ defmodule ExTractor.Mixfile do
   def project do
     [app: :ex_tractor,
      version: "0.1.0",
-     elixir: "~> 1.3",
+     elixir: "~> 1.4",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps()]
@@ -14,7 +14,8 @@ defmodule ExTractor.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger]]
+    [extra_applications: [:logger, :tackle],
+     mod: {ExTractor, []}]
   end
 
   # Dependencies can be Hex packages:
@@ -27,6 +28,10 @@ defmodule ExTractor.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [{:amqp, "0.2.0-pre.1", override: true},
+    {:credo, "~> 0.7", only: :dev},
+    {:tackle, github: "renderedtext/ex-tackle"},
+    {:poison, "~> 3.0"},
+    {:mock, "~> 0.2", only: :test}]
   end
 end
