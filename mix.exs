@@ -30,6 +30,7 @@ defmodule ExTractor.Mixfile do
   defp deps do
     [{:amqp, "0.2.0-pre.1", override: true},
     {:credo, "~> 0.7", only: :dev},
+    {:floki, "~> 0.17"},
     {:tackle, github: "renderedtext/ex-tackle"},
     {:poison, "~> 3.0"},
     {:mock, "~> 0.2", only: :test}]

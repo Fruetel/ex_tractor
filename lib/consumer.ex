@@ -20,6 +20,6 @@ defmodule Consumer do
   end
 
   defp parse_message(message) do
-    message |> Poison.decode!(as: %Consumer.Message{})
+    message |> Poison.decode!(as: %Document{})
   end
 end
