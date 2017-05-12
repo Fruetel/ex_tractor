@@ -10,6 +10,7 @@ defmodule UrlExtractor do
     |> Floki.find("body a")
     |> Floki.attribute("href")
     |> make_absolute(document.url)
+    |> remove_fragments
     |> drop_duplicates
     |> stringify
   end
@@ -24,5 +25,9 @@ defmodule UrlExtractor do
 
   defp drop_duplicates(urls) do
     Enum.uniq(urls)
+  end
+
+  defp remove_fragments(urls) do
+    Enum.map(urls, fn url -> Map.put(url, :fragment, nil) end)
   end
 end
