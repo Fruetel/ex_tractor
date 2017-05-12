@@ -10,9 +10,19 @@ defmodule UrlExtractor do
     |> Floki.find("body a")
     |> Floki.attribute("href")
     |> make_absolute(document.url)
+    |> drop_duplicates
+    |> stringify
   end
 
-  def make_absolute(urls, base) do
-    Enum.map(urls, fn rel -> URI.merge(base, rel) |> to_string end)
+  defp make_absolute(urls, base) do
+    Enum.map(urls, fn rel -> URI.merge(base, rel) end)
+  end
+
+  defp stringify(urls) do
+    Enum.map(urls, fn url -> URI.to_string(url) end)
+  end
+
+  defp drop_duplicates(urls) do
+    Enum.uniq(urls)
   end
 end
