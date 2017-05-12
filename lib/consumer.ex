@@ -3,10 +3,10 @@ defmodule Consumer do
   @moduledoc false
 
   use Tackle.Consumer,
-    url: config[:url],
-    exchange: config[:exchange],
-    routing_key: config[:routing_key],
-    service: config[:service]
+    url: config()[:url],
+    exchange: config()[:exchange],
+    routing_key: config()[:routing_key],
+    service: config()[:service]
 
   require Logger
 

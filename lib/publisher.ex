@@ -20,9 +20,9 @@ defmodule Publisher do
 
   defp options do
     %{
-      url: config[:url],
-      exchange: config[:exchange],
-      routing_key: config[:routing_key]
+      url: config()[:url],
+      exchange: config()[:exchange],
+      routing_key: config()[:routing_key]
     }
   end
 end
