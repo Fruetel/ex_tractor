@@ -1,0 +1,11 @@
+version: '3'
+services:
+  app:
+    build: .
+    working_dir: /code
+    environment:
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      - rabbitmq
+  rabbitmq:
+    image: rabbitmq:3.6.8
