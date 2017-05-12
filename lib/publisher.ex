@@ -10,17 +10,19 @@ defmodule Publisher do
   end
 
   defp publish_url(url) do
-    options = %{
+    Logger.info "Publishing url: #{url}"
+    Tackle.publish(url, options())
+  end
+
+  defp config do
+    Application.get_env(:ex_tractor, Publisher)
+  end
+
+  defp options do
+    %{
       url: config[:url],
       exchange: config[:exchange],
       routing_key: config[:routing_key]
     }
-
-    Logger.info "Publishing url: #{url}"
-    Tackle.publish(url, options)
-  end
-
-  defp config do
-    Application.get_env(:ex_retriever, Publisher)
   end
 end

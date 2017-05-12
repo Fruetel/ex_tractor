@@ -12,6 +12,11 @@ defmodule Consumer do
 
   def handle_message(message) do
     Logger.info "Received message: #{message}"
+
+    message
+    |> parse_message
+    |> UrlExtractor.extract_urls
+    |> Publisher.publish
     :ok
   end
 
