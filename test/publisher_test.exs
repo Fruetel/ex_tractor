@@ -11,11 +11,17 @@ defmodule PublisherTest do
       "http://www.example.net/some_ressource"
     ]
 
+    expected_messages = [
+      %{url: "http://www.example.org"},
+      %{url: "http://www.example.net"},
+      %{url: "http://www.example.net/some_ressource"}
+    ]
+
     with_mock Tackle, [publish: fn _, _ -> :ok end] do
       assert {:ok, [:ok, :ok, :ok]} = Publisher.publish(urls)
-      assert called Tackle.publish("http://www.example.org", :_)
-      assert called Tackle.publish("http://www.example.net", :_)
-      assert called Tackle.publish("http://www.example.net/some_ressource", :_)
+      Enum.map(expected_messages, fn message ->
+        assert called Tackle.publish(message, :_)
+      end)
     end
   end
 end

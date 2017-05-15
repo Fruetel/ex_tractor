@@ -10,8 +10,9 @@ defmodule Publisher do
   end
 
   defp publish_url(url) do
-    Logger.info "Publishing url: #{url}"
-    Tackle.publish(url, options())
+    url
+    |> to_message()
+    |> Tackle.publish(options())
   end
 
   defp config do
@@ -24,5 +25,9 @@ defmodule Publisher do
       exchange: config()[:exchange],
       routing_key: config()[:routing_key]
     }
+  end
+
+  defp to_message(url) do
+    %{url: url}
   end
 end
