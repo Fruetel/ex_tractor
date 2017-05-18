@@ -12,9 +12,9 @@ defmodule PublisherTest do
     ]
 
     expected_messages = [
-      %{url: "http://www.example.org"},
-      %{url: "http://www.example.net"},
-      %{url: "http://www.example.net/some_ressource"}
+      "{\"url\":\"http://www.example.org\"}",
+      "{\"url\":\"http://www.example.net\"}",
+      "{\"url\":\"http://www.example.net/some_ressource\"}"
     ]
 
     with_mock Tackle, [publish: fn _, _ -> :ok end] do

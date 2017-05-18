@@ -29,6 +29,6 @@ defmodule Publisher do
   end
 
   defp to_message(url) do
-    %{url: url}
+    %{url: url} |> Poison.encode!
   end
 end
