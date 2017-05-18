@@ -1,6 +1,6 @@
 # ExTractor
 
-**TODO: Add description**
+Elixir microservice to extract URLs from an HTML document provided in RabbitMq.
 
 ## Installation
 
