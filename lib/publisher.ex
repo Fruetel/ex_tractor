@@ -10,6 +10,7 @@ defmodule Publisher do
   end
 
   defp publish_url(url) do
+    Logger.info "Publishing: #{url}"
     url
     |> to_message()
     |> Tackle.publish(options())
