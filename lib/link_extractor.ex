@@ -1,10 +1,10 @@
-defmodule UrlExtractor do
+defmodule LinkExtractor do
 
   @moduledoc false
 
   require Logger
 
-  def extract_urls(document) do
+  def extract_links(%Document{} = document) do
     Logger.info "Extracting from #{document.url}"
     document.body
     |> Floki.find("body a")
@@ -12,15 +12,30 @@ defmodule UrlExtractor do
     |> make_absolute(document.url)
     |> remove_fragments
     |> drop_duplicates
-    |> stringify
+    |> linkify(document)
+    |> publish
+
+  end
+
+  defp publish(links) do
+    Logger.info "Publishing #{Enum.count(links)} extracted links"
+    Enum.map(links, fn link ->
+      :ok = Publisher.publish("links", "extracted", link)
+    end)
+    links
   end
 
   defp make_absolute(urls, base) do
     Enum.map(urls, fn rel -> URI.merge(base, rel) end)
   end
 
-  defp stringify(urls) do
-    Enum.map(urls, fn url -> URI.to_string(url) end)
+  defp linkify(urls, document) do
+    Enum.map(urls, fn url ->
+      %Link{
+        source_url: document.url,
+        destination_url: URI.to_string(url)
+      }
+    end)
   end
 
   defp drop_duplicates(urls) do

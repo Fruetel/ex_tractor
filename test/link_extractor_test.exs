@@ -1,4 +1,4 @@
-defmodule RetrieverTest do
+defmodule LinkExtractorTest do
   use ExUnit.Case
 
   test "It extracts links" do
@@ -16,11 +16,20 @@ defmodule RetrieverTest do
     }
 
     expected_result = [
-      "http://www.example.com/test.html",
-      "http://www.example.org/test2.html",
-      "https://www.example.net/path"
+      %Link{
+        source_url: "http://www.example.com",
+        destination_url: "http://www.example.com/test.html"
+      },
+      %Link{
+        source_url: "http://www.example.com",
+        destination_url: "http://www.example.org/test2.html"
+      },
+      %Link{
+        source_url: "http://www.example.com",
+        destination_url: "https://www.example.net/path"
+      }
     ]
 
-    assert expected_result == UrlExtractor.extract_urls(document)
+    assert expected_result == LinkExtractor.extract_links(document)
   end
 end

@@ -1,34 +1,29 @@
 defmodule Publisher do
 
-  @moduledoc false
-
   require Logger
 
-  def publish(urls) do
-    publish_results = Enum.map(urls, fn url -> publish_url(url) end)
-    {:ok, publish_results}
+  use GenServer
+  use AMQP
+
+  def start_link do
+    GenServer.start_link(__MODULE__, :ok, name: :publisher)
   end
 
-  defp publish_url(url) do
-    Logger.info "Publishing: #{url}"
-    url
-    |> to_message()
-    |> Tackle.publish(options())
+  def init(_opts) do
+    {:ok, conn} = Connection.open(Application.get_env(
+      :ex_tractor, Publisher)[:rabbitmq_url])
+    {:ok, channel} = Channel.open(conn)
+    {:ok, [channel: channel]}
   end
 
-  defp config do
-    Application.get_env(:ex_tractor, Publisher)
+  def publish(exchange, routing_key, %Link{} = link) do
+    GenServer.cast(:publisher, {:publish, exchange, routing_key, link})
   end
 
-  defp options do
-    %{
-      url: config()[:url],
-      exchange: config()[:exchange],
-      routing_key: config()[:routing_key]
-    }
-  end
-
-  defp to_message(url) do
-    %{url: url} |> Poison.encode!
+  def handle_cast({:publish, exchange, routing_key, %Link{} = link}, state) do
+    Logger.info "Publishing to #{exchange} with routing key #{routing_key}"
+    payload = Poison.encode!(link)
+    Basic.publish(state[:channel], exchange, routing_key, payload)
+    {:noreply, state}
   end
 end
