@@ -6,16 +6,22 @@ defmodule LinkExtractor do
 
   def extract_links(%Document{} = document) do
     Logger.info "Extracting from #{document.url}"
-    links = document.body
+    document.body
     |> Floki.find("body a")
     |> Floki.attribute("href")
     |> make_absolute(document.url)
     |> remove_fragments
     |> drop_duplicates
     |> linkify(document)
+    |> publish
 
-    Logger.info "Extracted #{Enum.count(links)} links"
+  end
 
+  defp publish(links) do
+    Logger.info "Publishing #{Enum.count(links)} extracted links"
+    Enum.map(links, fn link ->
+      :ok = Publisher.publish("links", "extracted", link)
+    end)
     links
   end
 
