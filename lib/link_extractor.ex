@@ -4,7 +4,7 @@ defmodule LinkExtractor do
 
   require Logger
 
-  def extract_links(document) do
+  def extract_links(%Document{} = document) do
     Logger.info "Extracting from #{document.url}"
     links = document.body
     |> Floki.find("body a")
@@ -16,7 +16,7 @@ defmodule LinkExtractor do
 
     Logger.info "Extracted #{Enum.count(links)} links"
 
-    urls
+    links
   end
 
   defp make_absolute(urls, base) do

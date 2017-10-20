@@ -8,6 +8,7 @@ defmodule ExTractor do
     import Supervisor.Spec
 
     children = [
+      worker(Consumer, [])
     ]
 
     opts = [strategy: :one_for_one, name: ExTractor.Supervisor]
