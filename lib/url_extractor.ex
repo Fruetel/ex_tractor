@@ -6,13 +6,17 @@ defmodule UrlExtractor do
 
   def extract_urls(document) do
     Logger.info "Extracting from #{document.url}"
-    document.body
+    urls = document.body
     |> Floki.find("body a")
     |> Floki.attribute("href")
     |> make_absolute(document.url)
     |> remove_fragments
     |> drop_duplicates
     |> stringify
+
+    Logger.info "Extracted #{Enum.count(urls)} urls"
+
+    urls
   end
 
   defp make_absolute(urls, base) do
