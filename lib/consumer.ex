@@ -12,7 +12,7 @@ defmodule Consumer do
   end
 
   @exchange    "documents"
-  @routing_key "retrieved"
+  @routing_key "retrieved.text.html"
   @queue       "ex_tractor"
   @queue_error "#{@queue}_error"
 
