@@ -6,15 +6,29 @@ defmodule LinkExtractor do
 
   def extract_links(%Document{} = document) do
     Logger.info "Extracting from #{document.url}"
-    document.body
-    |> Floki.find("body a")
-    |> Floki.attribute("href")
+    hrefs = extract_hrefs(document.body)
+    img_src = extract_img_src(document.body)
+
+    hrefs
+    |> Enum.concat(img_src)
     |> make_absolute(document.url)
     |> remove_fragments
     |> drop_duplicates
     |> linkify(document)
     |> publish
 
+  end
+
+  defp extract_hrefs(html) do
+    html
+    |> Floki.find("body a")
+    |> Floki.attribute("href")
+  end
+
+  defp extract_img_src(html) do
+    html
+    |> Floki.find("body img")
+    |> Floki.attribute("src")
   end
 
   defp publish(links) do
